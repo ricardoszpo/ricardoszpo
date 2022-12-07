@@ -1,0 +1,96 @@
+create table fornecedores(
+	cnpj varchar (18) primary key,
+	nomeFantasia varchar,
+	tipoRoupa varchar,
+	local varchar
+);
+
+insert into fornecedores
+(cnpj, nomeFantasia, tipoRoupa, local)
+values
+('22.333.333/0001-22', 'King Boutique', 'Moda Masculina', 'Santa Catarina'),
+('11.222.343/0001-12', 'Leila Store', 'Moda feminina', 'Santa Catarina');
+
+select * from fornecedores
+
+---------------------------------------------------------------
+
+create table funcionarios(
+	idCarteiraTrabalho varchar(14) primary key,
+	nome varchar,
+	cpf varchar,
+	salario decimal (7,2),
+	cargaHoraria int,
+	cargo varchar
+);
+
+insert into funcionarios
+(idCarteiraTrabalho, nome, cpf, salario, cargaHoraria, cargo)
+values
+('123.4444.55-6', 'JoÃ£o', '123.456.789-10', 1000.00, 5, 'estagiario'),
+('123.4444.55-7', 'Beatriz', '123.456.789-11', 2000.00, 8, 'estoquista');
+
+select * from funcionarios
+
+---------------------------------------------------------------
+
+create table cliente(
+	cpf varchar(14) primary key,
+	nome varchar,
+	telefone varchar,
+	email varchar,
+	endereÃ§o varchar
+);
+
+insert into cliente
+(cpf, nome, telefone, email, endereÃ§o)
+values
+('127-189-762-45', 'Joana', '(47)98888-8888', 'joana@gmail.com', 'Rua das lontras, 153'),
+('358-473-336-72', 'Kleber', '(48)97777-7777', 'kleber@gmail.com', 'Rua do Antares, 155');
+
+select * from cliente
+
+---------------------------------------------------------------
+
+create table produto(
+	codigoProduto bigint primary key,
+	tecido varchar,
+	tamanho varchar,
+	modelo varchar,
+	estilo varchar,
+	marca varchar,
+	preÃ§o decimal(5,2),
+	codigoFornecedor varchar(18),
+	foreign key (codigoFornecedor) references fornecedores(cnpj)
+);
+
+insert into produto
+(codigoProduto, tecido, tamanho, modelo, estilo, marca, preÃ§o, codigoFornecedor)
+values
+(129463, 'tactel', 'M', 'short', 'casual', 'Lacoste', 252.90, '11.111.111/0001-01'),
+(855947, 'algodÃ£o', 'G', 'vestido', 'gala', 'Prada', 353.50, '22.222.222/0001-01');
+
+select * from produto
+
+---------------------------------------------------------------
+
+create table venda(
+	data date,
+	codigoProduto bigint,
+	codigoFuncionario varchar(14),
+	codigoCliente varchar,
+	foreign key (codigoProduto) references produto(codigoProduto),
+	foreign key (codigoFuncionario) references funcionarios(idCarteiraTrabalho),
+	foreign key (codigoCliente) references cliente(CPF)
+);
+
+insert into venda
+(data, codigoProduto, codigoFuncionario, codigoCliente)
+values
+('2022-11-21', 129463, '123.456.789-10', '127-189-762-45'),
+('2022-11-21', 855947, '123.456.789-10', '127-189-762-45'),
+('2022-11-21', 855947, '123.456.789-11', '358-473-336-72');
+
+select * from venda
+
+---------------------------------------------------------------
