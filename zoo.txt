@@ -1,0 +1,169 @@
+create table animais(
+	codigoAnimal int primary key, 
+	nome varchar,
+	nascimento int,
+	especie varchar,
+	setor varchar,
+	peso decimal,
+	visitaVeterinario date,
+	observacoes varchar
+);
+
+insert into animais
+(codigoAnimal, nome, nascimento, especie, setor, peso, visitaVeterinario, observacoes)
+values
+(111, 'Kleber', 2010, 'Javali', 1, 96.2, '2022-11-21', 'NADA'),
+(222, 'Jonas', 2017, 'Hipopotamo', 2, 424.5, '2022-11-21', 'NADA'),
+(333, 'George', 2005, 'Macaco', 3, 22.4, '2022-11-21', 'NADA'),
+(444, 'Luis', 2002, 'Porco', 4, 128.3, '2022-11-21', 'NADA');
+
+----------------------------------------------------------------------------------------------------------------------
+
+create table funcionarios(
+	PIS varchar primary key,
+	nome varchar,
+	dataNascimento date,
+	CPF varchar,
+	cargo varchar,
+	cargaHoraria int,                                                       
+	salario decimal,
+	email varchar
+);
+
+----------------------------------------------------------------------------------------------------------------------
+
+*SQL SHELL* ->
+zoologico=# \copy funcionarios from 'C:\Users\gabriel_z_almeida\Downloads\tab-funcizoo.csv' delimiter ',' csv header;
+
+----------------------------------------------------------------------------------------------------------------------
+
+create table fornecedor(
+	CNPJ varchar primary key,
+	produto varchar,
+	email varchar,
+	local varchar
+);
+
+insert into fornecedor
+(CNPJ, produto, email, local)
+values
+('33.3333.333/3333-33', 'RaÃ§Ã£o para Porco', 'agropet@gmail.com', 'sao paulo'),
+('44.4444.444/4444-44', 'Banana', 'douglas-comerciodefrutas@gmail.com', 'minas gerais'),
+('55.5555.555/5555-55', 'sementes de grama', 'seugramado@gmail.com', 'espirito santo');
+
+----------------------------------------------------------------------------------------------------------------------
+
+create table estoque(
+	codigoProduto int primary key,
+	dataCompra date
+	produto varchar,
+	preco decimal,
+	quantidade varchar,
+	marca varchar,
+	validade date,
+	codigoFornecedor varchar references fornecedor(CNPJ)
+);
+
+insert into estoque
+(codigoProduto, dataCompra, produto, preco, quantidade, marca, validade, codigoFornecedor)
+values
+(88762, '2022-11-22', 'racao para porcos', 8200.0, '500kg', 'Agro Pet RaÃ§Ãµes', '2023-17-01', '33.3333.333/3333-33'),
+(47635, '2022-11-22', 'bananas', 11400.0, '500kg', 'Douglas Frutas', '2023-08-01', '44.4444.444/4444-44'),
+(56827, '2022-11-22', 'sementes de grama', 6500.0, '500kg', 'Verde da colina', '2023-01-01', '55.5555.555/5555-55');
+
+----------------------------------------------------------------------------------------------------------------------
+
+create table cuida(
+	codigoFuncionario varchar,
+	codigoAnimal int,
+	foreign key codigoFuncionario references funcionarios(PIS),
+	foreign key codigoAnimal references animais(codigoAnimal) 
+);
+
+insert into cuida
+(codigoFuncionario, codigoAnimal)
+values
+('11.22222.33-1', 333),
+('11.22222.33-2', 111),
+('11.22222.33-3', 222),
+('11.22222.33-4', 444);
+
+----------------------------------------------------------------------------------------------------------------------
+
+create table alimenta(
+	codigoAnimal int,
+	codigoEstoque int,
+	foreign key codigoAnimal references animais(codigoAnimal),
+	foreign key codigoEstoque references estoque(codigoProduto) 
+);
+
+insert into alimenta
+(codigoAnimal, codigoEstoque)
+values
+(444, 88762);
+
+----------------------------------------------------------------------------------------------------------------------
+
+create table visitantes(
+	CPF varchar primary key,
+	nome varchar,
+	idade int,
+	checkin date
+);
+
+----------------------------------------------------------------------------------------------------------------------
+
+*SQL SHELL* ->											
+zoologico=# \copy visitantes from 'C:\Users\gabriel_z_almeida\Downloads\tabelavisitantes.csv' delimiter ',' csv header;
+
+----------------------------------------------------------------------------------------------------------------------
+
+create table bilheteria(
+	idPulseira int primary key,
+	noZoo boolean,
+	codigoVisitante varchar references visitantes(CPF)
+);
+
+insert into bilheteria
+(idPulseira, noZoo, codigoVisitante)
+values
+(123456, false, 124.222.344-56),
+(234567, true, 172.985.643-24),
+(345678, true, 195.643.792-98);
+
+----------------------------------------------------------------------------------------------------------------------
+
+create table empresasParceiras(
+	CNPJ varchar primary key,
+	nomeEmpresa varchar,
+	aluguel decimal,
+	email varchar,
+	funcao varchar
+);
+										
+----------------------------------------------------------------------------------------------------------------------
+
+*SQL SHELL* ->											
+zoologico=# \copy empresasParceiras from 'C:\Users\gabriel_z_almeida\Downloads\tabelaempresasparceiras.csv' delimiter ',' csv header;
+
+----------------------------------------------------------------------------------------------------------------------
+
+create table contas(
+	codigo int primary key,
+	mesAno varchar,
+	totalEstoque decimal,
+	totalFuncionarios decimal,
+	totalBilheteria decimal,
+	gastosExtras decimal,
+	lucro decimal,
+);
+
+insert into contas
+(codigo, mesAno, totalEstoque, totalFuncionarios, totalBilheteria, gastosExtras, lucro)
+values
+(123461, 'janeiro 2020', 394369.30, 100950.00, 1144320.00, 12230.30),
+(123462, 'fevereiro 2020', 264781.90, 101950.00, 1001210.00, 9480.20);
+
+UPDATE contas SET lucro = (totalBilheteria - (totalEstoque + gastosExtras + totalFuncionarios))
+
+----------------------------------------------------------------------------------------------------------------------
